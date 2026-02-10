@@ -304,14 +304,14 @@ def generate_recommendations():
         if 'ratings' not in session or 'user_id' not in session:
             return jsonify({'error': 'No session data found'}), 400
         
-        # Get cached data
         cache_key = f"{session['user_id']}_{session['username']}"
-        if cache_key not in app.user_cache:
+        cached_data = app.user_cache[cache_key]
+        if not cached_data:
             return jsonify({'error': 'Session expired. Please start over.'}), 400
         
-        cached_data = app.user_cache[cache_key]
         sample = cached_data['sample']
         planning = cached_data['planning']
+        planning_limited = sorted(planning, key=lambda x: x.get('averageScore') or 0, reverse=True)[:100]
         
         ratings = session.get('ratings', {})
         
@@ -335,7 +335,7 @@ def generate_recommendations():
         
         # Prepare planning anime data
         planning_anime = []
-        for anime in planning:
+        for anime in planning_limited:
             planning_anime.append({
                 'id': anime['id'],
                 'title': anime['title']['english'] or anime['title']['romaji'],
@@ -399,9 +399,10 @@ Respond ONLY with valid JSON in this exact format (no markdown, no code blocks):
                 }],
                 'generationConfig': {
                     'temperature': 0.7,
-                    'maxOutputTokens': 2000,
+                    'response_mime_type': 'application/json'
                 }
-            }
+            },
+            timeout=30
         )
         
         if api_response.status_code != 200:
@@ -411,15 +412,7 @@ Respond ONLY with valid JSON in this exact format (no markdown, no code blocks):
         ai_data = api_response.json()
         
         # Extract text from Gemini response
-        try:
-            ai_text = ai_data['candidates'][0]['content']['parts'][0]['text']
-        except (KeyError, IndexError) as e:
-            return jsonify({'error': f'Unexpected Gemini API response format: {str(e)}'}), 500
-        
-        # Clean up response
-        ai_text = ai_text.strip()
-        ai_text = ai_text.replace('```json', '').replace('```', '').strip()
-        
+        ai_text = ai_data['candidates'][0]['content']['parts'][0]['text']
         recommendations = json.loads(ai_text)
         
         # Match with full anime data
@@ -451,8 +444,8 @@ Respond ONLY with valid JSON in this exact format (no markdown, no code blocks):
             'recommendations': full_recommendations
         })
         
-    except json.JSONDecodeError as e:
-        return jsonify({'error': f'Failed to parse AI response: {str(e)}'}), 500
+    except requests.exceptions.Timeout:
+        return jsonify({'error': 'The AI took too long to respond. Please try again.'}), 504    
     except Exception as e:
         return jsonify({'error': f'Failed to generate recommendations: {str(e)}'}), 500
 

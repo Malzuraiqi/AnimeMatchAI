@@ -34,6 +34,7 @@
             line-height: 1.7;
             min-height: 100vh;
             position: relative;
+            overflow-x: hidden;
         }
 
         body::before {
@@ -50,8 +51,39 @@
             z-index: 0;
         }
 
+        .side-banner {
+            position: fixed;
+            top: 0;
+            width: 15vw;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.3;
+            z-index: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .side-banner.left {
+            left: 0;
+            background-image: url('../static/banner1.jpg');
+        }
+
+        .side-banner.right {
+            right: 0;
+            background-image: url('../static/banner2.jpg');
+            background-position: center;
+        }
+
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
         .container {
             max-width: 900px;
+            width: 100%;
             margin: 0 auto;
             padding: 2rem;
             position: relative;
@@ -60,8 +92,24 @@
 
         header {
             text-align: center;
-            padding: 3rem 0 2rem;
+            padding: 2rem 0;
             animation: fadeInDown 0.8s ease-out;
+        }
+
+        .logo-container {
+            margin-bottom: 1rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1) rotate(5deg);
         }
 
         h1 {
@@ -108,6 +156,35 @@
             margin-bottom: 2rem;
             box-shadow: var(--shadow);
             animation: fadeInUp 0.6s ease-out;
+        }
+
+        .info-banner {
+            background: rgba(78, 205, 196, 0.1);
+            border: 2px solid rgba(78, 205, 196, 0.3);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .info-banner h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-teal);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .info-banner p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
 
         .input-group {
@@ -182,6 +259,26 @@
             margin-bottom: 2rem;
         }
 
+        .keyboard-hint {
+            background: rgba(255, 107, 107, 0.05);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .keyboard-hint kbd {
+            background: var(--bg-elevated);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            border: 1px solid var(--border);
+            font-weight: 700;
+            color: var(--accent-coral);
+        }
+
         .anime-display {
             display: flex;
             gap: 2rem;
@@ -196,6 +293,11 @@
             border-radius: 1rem;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
             flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .anime-cover:hover {
+            transform: scale(1.02);
         }
 
         .anime-content {
@@ -243,6 +345,13 @@
             margin-bottom: 1rem;
             text-transform: uppercase;
             letter-spacing: 0.15em;
+        }
+
+        .rating-label .optional {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: none;
+            letter-spacing: 0.05em;
         }
 
         .rating-buttons {
@@ -309,6 +418,16 @@
             color: var(--accent-coral);
         }
 
+        .feedback-tip {
+            background: rgba(255, 164, 64, 0.1);
+            border-left: 3px solid var(--accent-amber);
+            padding: 0.75rem 1rem;
+            margin-top: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
         .navigation {
             display: flex;
             gap: 1rem;
@@ -363,6 +482,14 @@
             margin-bottom: 2rem;
             animation: fadeInUp 0.5s ease-out both;
             position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .rec-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(78, 205, 196, 0.3);
+            border-color: var(--accent-coral);
         }
 
         .rec-card::before {
@@ -374,6 +501,22 @@
             height: 100%;
             background: linear-gradient(180deg, var(--accent-teal), var(--accent-coral));
             border-radius: 1.5rem 0 0 1.5rem;
+        }
+
+        .rec-card::after {
+            content: 'Click to view on AniList →';
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .rec-card:hover::after {
+            opacity: 1;
         }
 
         .rec-header {
@@ -460,9 +603,24 @@
             }
         }
 
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
         @keyframes spin {
             to {
                 transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .side-banner {
+                display: none;
             }
         }
 
@@ -495,21 +653,33 @@
                 max-width: 200px;
                 height: 280px;
             }
+
+            .keyboard-hint {
+                font-size: 0.65rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>AnimeMatch</h1>
-            <p class="tagline">AI-Powered Recommendations</p>
-        </header>
+    <div class="side-banner left"></div>
+    <div class="side-banner right"></div>
+    
+    <div class="page-wrapper">
+        <div class="container">
+            <header>
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='icon.png') }}" alt="AnimeMatch Logo" class="logo">
+                </div>
+                <h1>AnimeMatch</h1>
+                <p class="tagline">AI-Powered Recommendations</p>
+            </header>
 
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressBar"></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+
+            <div id="app"></div>
         </div>
-
-        <div id="app"></div>
     </div>
 
     <script>
@@ -518,10 +688,31 @@
         let totalAnime = 0;
         let currentIndex = 0;
 
-        // Show username input
+        document.addEventListener('keydown', handleKeyPress);
+
+        function handleKeyPress(e) {
+            if (!currentAnime) return;
+
+            if (e.key >= '0' && e.key <= '9') {
+                const rating = e.key === '0' ? 10 : parseInt(e.key);
+                selectRating(rating);
+                e.preventDefault();
+            }
+
+            if (e.key === 'Enter' && currentRating) {
+                navigate('next');
+                e.preventDefault();
+            }
+        }
+
         function showUsernameInput() {
             updateProgress(0);
             document.getElementById('app').innerHTML = `
+                <div class="info-banner">
+                    <h3>💡 Pro Tip for Better Recommendations</h3>
+                    <p>Before starting, make sure your AniList <strong>Planning List</strong> has plenty of anime! Add shows with interesting covers, synopses, or ones you're hesitant about. The more variety in your planning list, the better AI recommendations you'll get!</p>
+                </div>
+
                 <div class="card">
                     <div class="input-group">
                         <label for="username">AniList Username</label>
@@ -532,7 +723,6 @@
             `;
         }
 
-        // Fetch user data
         async function fetchUser() {
             const username = document.getElementById('username').value.trim();
             if (!username) {
@@ -563,7 +753,6 @@
             }
         }
 
-        // Load current anime
         async function loadCurrentAnime() {
             try {
                 const response = await fetch('/get_current_anime');
@@ -574,7 +763,7 @@
                 }
 
                 if (data.done) {
-                    showRecommendationPrompt();
+                    generateRecommendations();
                     return;
                 }
 
@@ -582,7 +771,6 @@
                 currentIndex = data.index;
                 totalAnime = data.total;
                 
-                // Restore existing rating if any
                 if (data.existingRating && data.existingRating.score) {
                     currentRating = data.existingRating.score;
                 } else {
@@ -596,15 +784,18 @@
             }
         }
 
-        // Show anime rating interface
         function showAnimeRating(anime, index, total, existingRating) {
-            updateProgress(((index + 1) / total) * 50);
+            updateProgress(((index + 1) / total) * 100);
 
             const app = document.getElementById('app');
             app.innerHTML = `
                 <div class="card">
                     <div class="anime-viewer">
                         <div class="anime-counter">Anime ${index + 1} of ${total}</div>
+                        
+                        <div class="keyboard-hint">
+                            ⌨️ Shortcuts: Press <kbd>1</kbd>-<kbd>9</kbd> to rate, <kbd>0</kbd> for 10, <kbd>Enter</kbd> to continue
+                        </div>
                         
                         <div class="anime-display">
                             <img src="${anime.coverImage}" alt="${anime.title}" class="anime-cover">
@@ -624,35 +815,42 @@
                                         ).join('')}
                                     </div>
                                     
-                                    <div class="rating-label">Why this rating? (Required, max 10 words)</div>
-                                    <textarea id="reasonInput" placeholder="Express your thoughts in 10 words or less..." oninput="checkWordCount()">${existingRating ? existingRating.reason : ''}</textarea>
+                                    <div class="rating-label">
+                                        Why this rating? 
+                                        <span class="optional">(Optional, but helps AI - max 10 words)</span>
+                                    </div>
+                                    <textarea id="reasonInput" placeholder="e.g., 'Great animation but slow pacing'" oninput="checkWordCount()">${existingRating ? existingRating.reason : ''}</textarea>
                                     <div class="word-count" id="wordCount">0 / 10 words</div>
+                                    <div class="feedback-tip">
+                                        💡 Adding feedback helps the AI understand your preferences better and give more accurate recommendations!
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="navigation">
                             <button class="nav-btn" onclick="navigate('prev')" ${index === 0 ? 'disabled' : ''}>← Previous</button>
-                            <button class="nav-btn" onclick="navigate('next')">${index === total - 1 ? 'Finish Rating →' : 'Next →'}</button>
+                            <button class="nav-btn" onclick="navigate('next')">${index === total - 1 ? 'Get Recommendations →' : 'Next →'}</button>
                         </div>
                     </div>
                 </div>
             `;
 
-            // Trigger word count check for existing reason
             if (existingRating && existingRating.reason) {
                 checkWordCount();
             }
         }
 
-        // Select rating
         function selectRating(score) {
             currentRating = score;
             document.querySelectorAll('.rating-btn').forEach(btn => btn.classList.remove('selected'));
-            event.target.classList.add('selected');
+            document.querySelectorAll('.rating-btn').forEach(btn => {
+                if (parseInt(btn.textContent) === score) {
+                    btn.classList.add('selected');
+                }
+            });
         }
 
-        // Check word count
         function checkWordCount() {
             const textarea = document.getElementById('reasonInput');
             const countDiv = document.getElementById('wordCount');
@@ -663,9 +861,7 @@
             countDiv.classList.toggle('exceeded', wordCount > 10);
         }
 
-        // Navigate between anime
         async function navigate(direction) {
-            // Validate current rating before navigating
             const reason = document.getElementById('reasonInput').value.trim();
             const words = reason.split(/\s+/).filter(w => w.length > 0);
 
@@ -674,17 +870,11 @@
                 return;
             }
 
-            if (!reason) {
-                alert('Please provide feedback before continuing');
-                return;
-            }
-
             if (words.length > 10) {
                 alert('Please keep your feedback to 10 words or less');
                 return;
             }
 
-            // Save current rating
             try {
                 const response = await fetch('/save_rating', {
                     method: 'POST',
@@ -701,7 +891,6 @@
                     throw new Error(data.error || 'Failed to save rating');
                 }
 
-                // Navigate
                 const navResponse = await fetch('/navigate', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -719,23 +908,9 @@
             }
         }
 
-        // Show recommendation prompt
-        function showRecommendationPrompt() {
-            updateProgress(50);
-            const app = document.getElementById('app');
-            app.innerHTML = `
-                <div class="card" style="text-align: center;">
-                    <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; margin-bottom: 1rem; color: var(--accent-teal);">Rating Complete!</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">Ready to discover anime you'll love?</p>
-                    <button onclick="generateRecommendations()" style="font-size: 1rem; padding: 1.3rem 3rem;">Generate AI Recommendations</button>
-                </div>
-            `;
-        }
-
-        // Generate recommendations
         async function generateRecommendations() {
             showLoading('AI is analyzing your preferences and crafting personalized recommendations...');
-            updateProgress(75);
+            updateProgress(100);
 
             try {
                 const response = await fetch('/generate_recommendations', {
@@ -756,10 +931,7 @@
             }
         }
 
-        // Display recommendations
         function displayRecommendations(recommendations) {
-            updateProgress(100);
-
             if (!recommendations || recommendations.length === 0) {
                 showError('No suitable recommendations found. Try rating more anime with different scores.');
                 return;
@@ -769,11 +941,11 @@
             app.innerHTML = `
                 <div class="card">
                     <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 3rem; margin-bottom: 0.5rem; background: linear-gradient(120deg, var(--accent-teal), var(--accent-coral)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Your Perfect Matches</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">Anime from your planning list that match your taste</p>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">Anime from your planning list that match your taste (click to view on AniList)</p>
                     
                     <div class="recommendations">
                         ${recommendations.map((rec, i) => `
-                            <div class="rec-card" style="animation-delay: ${i * 0.1}s">
+                            <div class="rec-card" style="animation-delay: ${i * 0.1}s" onclick="window.open('${rec.siteUrl}', '_blank')">
                                 <div class="rec-header">
                                     <img src="${rec.coverImage}" alt="${rec.title}" class="rec-cover">
                                     <div class="rec-info">
@@ -798,7 +970,6 @@
             `;
         }
 
-        // Show loading
         function showLoading(message) {
             document.getElementById('app').innerHTML = `
                 <div class="card">
@@ -810,7 +981,6 @@
             `;
         }
 
-        // Show error
         function showError(message) {
             document.getElementById('app').innerHTML = `
                 <div class="card">
@@ -823,12 +993,10 @@
             `;
         }
 
-        // Update progress bar
         function updateProgress(percent) {
             document.getElementById('progressBar').style.width = percent + '%';
         }
 
-        // Start over
         async function startOver() {
             await fetch('/reset', {method: 'POST'});
             currentAnime = null;
@@ -838,7 +1006,6 @@
             showUsernameInput();
         }
 
-        // Initialize
         showUsernameInput();
     </script>
 </body>
